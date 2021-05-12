@@ -7,8 +7,14 @@ import os
 import subprocess
 import sys
 
-path = os.path.dirname(__file__) + "./new"
+path = os.path.dirname(__file__) + "/img"
 namePrefix = sys.argv[1]
+
+try:
+    ext= '.' + sys.argv[2]
+except IndexError:
+     ext= '.webp'
+   
 
 os.chdir(path)
 # subprocess.run(["mkdir", "-p", "to"])
@@ -22,14 +28,13 @@ for file in files:
         newFilename = filename
 
         if namePrefix:
-            newFilename = namePrefix + "-" + str(i).zfill(2)
+            newFilename = namePrefix + "-" + str(i).zfill(2) + ext
             i += 1
+            
+        convertList.append(f"magick \"{file}\" -resize x1080 -quality 50 -strip  \"{newFilename}\"")
+        print(f"![](https://raw.githubusercontent.com/LeiHao0/BlogAssets/assets/{newFilename})")
 
-        convertList.append(
-            f"convert -resize x1080 -strip -quality 80% \"{file}\" \"../{newFilename}.webp\"")
-
-
-pool = Pool(10)
+pool = Pool(6)
 for i, returncode in enumerate(pool.imap(partial(call, shell=True), convertList)):
     if returncode != 0:
         print("%d command failed: %d" % (i, returncode))
