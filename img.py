@@ -15,15 +15,14 @@ try:
 except IndexError:
      ext= '.webp'
    
-
 os.chdir(path)
-# subprocess.run(["mkdir", "-p", "to"])
+os.makedirs(namePrefix, exist_ok=True)
 
 convertList = []
 files = sorted(os.listdir("./"))
 i = 0
 for file in files:
-    if file.endswith('.jpeg'):
+    if file.lower().endswith('.jpeg') or file.lower().endswith('.jpg'):
         filename = os.path.splitext(file)[0]
         newFilename = filename
 
@@ -31,8 +30,8 @@ for file in files:
             newFilename = namePrefix + "-" + str(i).zfill(2) + ext
             i += 1
             
-        convertList.append(f"magick \"{file}\" -resize x1080 -quality 50 -strip  \"{newFilename}\"")
-        print(f"![](https://raw.githubusercontent.com/LeiHao0/BlogAssets/assets/{newFilename})")
+        convertList.append(f"magick \"{file}\" -resize x1080 -quality 60 -strip  \"{namePrefix}/{newFilename}\"")
+        print(f"![](https://raw.githubusercontent.com/LeiHao0/BlogAssets/assets/{namePrefix}/{newFilename})")
 
 pool = Pool(6)
 for i, returncode in enumerate(pool.imap(partial(call, shell=True), convertList)):
