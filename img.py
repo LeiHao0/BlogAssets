@@ -30,10 +30,10 @@ for file in files:
             newFilename = namePrefix + "-" + str(i).zfill(2) + ext
             i += 1
             
-        convertList.append(f"magick \"{file}\" -resize x1080 -quality 60 -strip  \"{namePrefix}/{newFilename}\"")
+        convertList.append(f"magick \"{file}\" -resize x1080 -quality 80 -strip  \"{namePrefix}/{newFilename}\"")
         print(f"![](https://raw.githubusercontent.com/LeiHao0/BlogAssets/assets/{namePrefix}/{newFilename})")
 
-pool = Pool(6)
+pool = Pool(8)
 for i, returncode in enumerate(pool.imap(partial(call, shell=True), convertList)):
     if returncode != 0:
         print("%d command failed: %d" % (i, returncode))
